@@ -36,7 +36,7 @@ class SignUp (Resource):
             db.session.add(new_user)
             db.session.commit()
             # Generate access token for the new user
-            access_token = create_access_token(identity=new_user.user_id )
+            access_token = create_access_token(identity=str(new_user.user_id) )
             # Return user and access token as response
             response = {"user_id": new_user.user_id, "name": new_user.name, "email": new_user.email, "token": access_token, "isadmin": new_user.isadmin}
             return response, 200
@@ -58,7 +58,7 @@ class Login(Resource):
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
-                access_token = create_access_token(identity=user.user_id)
+                access_token = create_access_token(identity=str(user.user_id))
                 response = {"user_id": user.user_id, "token": access_token, "isadmin": user.isadmin }
                 return response, 200
             else:
